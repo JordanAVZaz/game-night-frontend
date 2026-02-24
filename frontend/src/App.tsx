@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react"
-import {
-  Container,
-  Typography,
-  TextField,
+import { 
+  Section,
+  Theme, 
+  Box, 
+  ThemePanel,
+  Flex,
+  Text,
   Button,
-  Card,
-  CardContent,
-  Stack,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Select,
-  MenuItem
-} from "@mui/material"
+  ScrollArea
+ } from "@radix-ui/themes";
+
+import { useEffect, useState } from "react"
+import { GamesMenu } from "./sidebar/games";
+import { Sessions, SessionsProvider } from "./sessions";
+import {useDraggable, DragDropProvider} from '@dnd-kit/react';
+
+
 
 type Player = {
   id: string
@@ -127,146 +128,184 @@ async function createSession() {
 }
 
 
-  return (
-    <Container maxWidth="sm">
-      <Typography variant="h3" sx={{ mt: 4 }}>
-        Game Night Leaderboard
-      </Typography>
-      <Button
-        variant="contained"
-        sx={{ mt: 2 }}
-        onClick={() => setOpen(true)}
-      >
-        Add Session
-      </Button>
+	return (
+    
+     <Theme accentColor="iris" grayColor="mauve">
+      <Flex height="100vh" width="100vw">
+        {/* Sidebar */}
+        <SessionsProvider>
+        <Box width="250px" p="4" style={{ borderRight: "1px solid var(--gray-5)" }}>
+          Games
+          <GamesMenu></GamesMenu>
+        </Box>
+
+        {/* Main Content Column */}
+        <Flex direction="column" flexGrow="1">
+
+          {/* Header */}
+          <Box p="4" style={{ borderBottom: "1px solid var(--gray-5)" }}>
+            Header
+          </Box>
+
+          {/* Timeline (scrollable) */}
+          <ScrollArea type="auto" style={{ flex: 1 }}>
+            <Flex gap="3" direction="column" p="4">
+            <Sessions></Sessions>
+            </Flex>
+          </ScrollArea>
+
+          {/* Footer */}
+          <Box p="4" style={{ borderTop: "1px solid var(--gray-5)" }}>
+            Footer
+          </Box>
+        </Flex>
+        </SessionsProvider>
+      </Flex>
+    </Theme>
+	)
 
 
-      <Stack direction="row" spacing={2} sx={{ my: 3 }}>
-        <TextField
-          label="Player name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          fullWidth
-        />
 
-        <Button variant="contained" onClick={createPlayer}>
-          Add
-        </Button>
-      </Stack>
+//   return (
+//     <Container maxWidth="sm">
+//       <Typography variant="h3" sx={{ mt: 4 }}>
+//         Game Night Leaderboard
+//       </Typography>
+//       <Button
+//         variant="contained"
+//         sx={{ mt: 2 }}
+//         onClick={() => setOpen(true)}
+//       >
+//         Add Session
+//       </Button>
 
-      <Stack spacing={2}>
-        {players.map((p) => (
-          <Card key={p.id}>
-            <CardContent>
-              <Typography variant="h6">
-                {p.name} — {p.score}
-              </Typography>
 
-              {/* <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                <Button
-                  variant="contained"
-                  onClick={() => updateScore(p.id, 1)}
-                >
-                  +1
-                </Button>
+//       <Stack direction="row" spacing={2} sx={{ my: 3 }}>
+//         <TextField
+//           label="Player name"
+//           value={name}
+//           onChange={(e) => setName(e.target.value)}
+//           fullWidth
+//         />
 
-                <Button
-                  variant="outlined"
-                  onClick={() => updateScore(p.id, -1)}
-                >
-                  -1
-                </Button>
-              </Stack> */}
-            </CardContent>
-          </Card>
-        ))}
-      </Stack>
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-  <DialogTitle>Create Session</DialogTitle>
+//         <Button variant="contained" onClick={createPlayer}>
+//           Add
+//         </Button>
+//       </Stack>
 
-  <DialogContent>
+//       <Stack spacing={2}>
+//         {players.map((p) => (
+//           <Card key={p.id}>
+//             <CardContent>
+//               <Typography variant="h6">
+//                 {p.name} — {p.score}
+//               </Typography>
 
-    {/* GAME SELECT */}
-    <Select
-      fullWidth
-      value={selectedGame}
-      onChange={(e) => setSelectedGame(e.target.value)}
-      sx={{ mt: 2 }}
-    >
-      {games.map((g: any) => (
-        <MenuItem key={g.id} value={g.id}>
-          {g.name}
-        </MenuItem>
-      ))}
+//               {/* <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+//                 <Button
+//                   variant="contained"
+//                   onClick={() => updateScore(p.id, 1)}
+//                 >
+//                   +1
+//                 </Button>
 
-      <MenuItem
-        onClick={async () => {
-          const name = prompt("Enter game name")
-          if (!name) return
+//                 <Button
+//                   variant="outlined"
+//                   onClick={() => updateScore(p.id, -1)}
+//                 >
+//                   -1
+//                 </Button>
+//               </Stack> */}
+//             </CardContent>
+//           </Card>
+//         ))}
+//       </Stack>
+//       <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+//   <DialogTitle>Create Session</DialogTitle>
 
-          const res = await fetch(`${API}/games`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ name })
-          })
+//   <DialogContent>
 
-          const newGame = await res.json()
+//     {/* GAME SELECT */}
+//     <Select
+//       fullWidth
+//       value={selectedGame}
+//       onChange={(e) => setSelectedGame(e.target.value)}
+//       sx={{ mt: 2 }}
+//     >
+//       {games.map((g: any) => (
+//         <MenuItem key={g.id} value={g.id}>
+//           {g.name}
+//         </MenuItem>
+//       ))}
 
-          setGames([...games, newGame])
-          setSelectedGame(newGame.id)
-        }}
-      >
-        ➕ Add Game
-      </MenuItem>
+//       <MenuItem
+//         onClick={async () => {
+//           const name = prompt("Enter game name")
+//           if (!name) return
 
-    </Select>
+//           const res = await fetch(`${API}/games`, {
+//             method: "POST",
+//             headers: {
+//               "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify({ name })
+//           })
 
-    {/* PLAYER RANKING */}
-    {players.map((p) => (
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ mt: 2 }}
-        key={p.id}
-        alignItems="center"
-      >
-        <Typography sx={{ width: 120 }}>
-          {p.name}
-        </Typography>
+//           const newGame = await res.json()
 
-        <Select
-          value={placements[p.id] || 1}
-          onChange={(e) =>
-            setPlacements({
-              ...placements,
-              [p.id]: Number(e.target.value)
-            })
-          }
-        >
-          {[1,2,3,4].map((n) => (
-            <MenuItem key={n} value={n}>
-              {n}
-            </MenuItem>
-          ))}
-        </Select>
-      </Stack>
-    ))}
+//           setGames([...games, newGame])
+//           setSelectedGame(newGame.id)
+//         }}
+//       >
+//         ➕ Add Game
+//       </MenuItem>
 
-  </DialogContent>
+//     </Select>
 
-  <DialogActions>
-    <Button onClick={() => setOpen(false)}>
-      Cancel
-    </Button>
+//     {/* PLAYER RANKING */}
+//     {players.map((p) => (
+//       <Stack
+//         direction="row"
+//         spacing={2}
+//         sx={{ mt: 2 }}
+//         key={p.id}
+//         alignItems="center"
+//       >
+//         <Typography sx={{ width: 120 }}>
+//           {p.name}
+//         </Typography>
 
-    <Button variant="contained" onClick={createSession}>
-      Commit
-    </Button>
-  </DialogActions>
-</Dialog>
+//         <Select
+//           value={placements[p.id] || 1}
+//           onChange={(e) =>
+//             setPlacements({
+//               ...placements,
+//               [p.id]: Number(e.target.value)
+//             })
+//           }
+//         >
+//           {[1,2,3,4].map((n) => (
+//             <MenuItem key={n} value={n}>
+//               {n}
+//             </MenuItem>
+//           ))}
+//         </Select>
+//       </Stack>
+//     ))}
 
-    </Container>
-  )
+//   </DialogContent>
+
+//   <DialogActions>
+//     <Button onClick={() => setOpen(false)}>
+//       Cancel
+//     </Button>
+
+//     <Button variant="contained" onClick={createSession}>
+//       Commit
+//     </Button>
+//   </DialogActions>
+// </Dialog>
+
+//     </Container>
+//   )
 }
