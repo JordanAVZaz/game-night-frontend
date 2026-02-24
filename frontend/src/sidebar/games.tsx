@@ -85,11 +85,11 @@ export function GamesMenu() {
     const [deleteGameSelect, setDeleteGameSelect] = useState("");
     const [search, setSearch] = useState("");
     const [games, setGames] = useState([
-    "Chess",
-    "Timeline Wars",
-    "Castle Deck",
-    "Era of Conquest",
-    "Celestia"
+    "Sheriff",
+    "Catan",
+    "The Quest for El Dorado",
+    "Finska",
+    "Wingspan"
     ]);
     const { addSession, sessions } = useSessions()
 

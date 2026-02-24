@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from "react"
 import { GamesMenu } from "./sidebar/games";
 import { Sessions, SessionsProvider } from "./sessions";
-import {useDraggable, DragDropProvider} from '@dnd-kit/react';
+// import {useDraggable, DragDropProvider} from '@dnd-kit/react';
 
 
 
@@ -34,11 +34,11 @@ export default function App() {
   const [players, setPlayers] = useState<Player[]>([])
   const [name, setName] = useState("")
 
-  const [games, setGames] = useState<Game[]>([])
-  const [selectedGame, setSelectedGame] = useState("")
+  // const [games, setGames] = useState<Game[]>([])
+  // const [selectedGame, setSelectedGame] = useState("")
 
-  const [open, setOpen] = useState(false)
-  const [placements, setPlacements] = useState<Record<string, number>>({})
+  // const [open, setOpen] = useState(false)
+  // const [placements, setPlacements] = useState<Record<string, number>>({})
 
   
 
